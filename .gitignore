@@ -1,1 +1,8 @@
 .ipynb_checkpoints
+app.py
+important_indices.pkl
+modelo_sql_injection_reduced.pkl
+pipeline_sql_injection.pkl
+sqlinjection_ml-Copy1.ipynb
+templates/
+vectorizer_tfidf.pkl
