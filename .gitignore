@@ -6,3 +6,7 @@ pipeline_sql_injection.pkl
 sqlinjection_ml-Copy1.ipynb
 templates/
 vectorizer_tfidf.pkl
+Teste_Word_2_Vec.py
+Teste_TF_IDF.py
+model_rf_word2vec.pkl
+model_word2vec.pkl
