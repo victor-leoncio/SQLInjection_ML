@@ -1,0 +1,23 @@
+FROM archlinux:latest
+
+WORKDIR /app
+
+RUN pacman -Syu --noconfirm && \
+    pacman -S --noconfirm python python-pip python-virtualenv base-devel && \
+    pacman -S --noconfirm git
+
+RUN python -m venv /app/venv
+
+RUN /app/venv/bin/pip install --upgrade pip
+
+COPY ./templates /app/templates
+COPY main.py /app/
+COPY requirements.txt /app/
+
+RUN /app/venv/bin/pip install -r requirements.txt
+
+EXPOSE 8000
+
+ENV FLASK_APP=main.py
+
+CMD ["/app/venv/bin/flask", "run", "--host", "0.0.0.0", "--port", "8000", "--debug"]
