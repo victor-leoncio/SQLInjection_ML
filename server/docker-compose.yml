@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # Firewall container - sits in front of everything
+  firewall:
+    build: ./firewall
+    container_name: sql_injection_firewall
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+      - sql_detect
+    networks:
+      - frontend
+      - backend
+    privileged: true  # Required for iptables
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - /lib/modules:/lib/modules:ro
+    restart: unless-stopped
+    environment:
+      - NGINX_WORKER_PROCESSES=auto
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Web application container
+  web:
+    build: ./web
+    container_name: sql_injection_web
+    expose:
+      - "8000"
+    depends_on:
+      - sql_detect
+    networks:
+      - backend
+    restart: unless-stopped
+    environment:
+      - FLASK_ENV=production
+      - FLASK_DEBUG=0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # SQL Injection detection API
+  sql_detect:
+    build: ./sql_detect
+    container_name: sql_injection_detector
+    expose:
+      - "7000"
+    networks:
+      - backend
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  frontend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+  backend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+
+volumes:
+  firewall_logs:
+    driver: local

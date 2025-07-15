@@ -3,3 +3,4 @@ joblib
 requests
 fastapi
 uvicorn
+werkzeug

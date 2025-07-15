@@ -13,14 +13,13 @@ print("\n################ Teste de Métricas do Word2Vec (Sem Paralelismo) #####
 def predict():
     cnt_normal = 0;
     cnt_injection = 0;
-    sentence = "OR 3409=3409 AND ('pytW' LIKE 'pytW".upper()
-    #sentence = "OR 3409=3409 AND ('pytW' LIKE 'pytW".lower()
 
+    sentence = "OR 3409=3409 AND ('pytW' LIKE 'pytW".lower()
     start_time = time.time()
 
     words = sentence.split()
     vector = [vectorizer.wv[word] for word in words if word in vectorizer.wv]
-    
+    end_time = 0; 
     if vector:
         input_vector = np.mean(vector, axis=0).reshape(1, -1)
         prediction = model.predict(input_vector)

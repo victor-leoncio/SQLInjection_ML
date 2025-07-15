@@ -40,7 +40,30 @@ async def detectar(data: InputData):
     print(f"DEBUG ##################################### -> IP = {ip}")
 
     if resultado == 1:
-        return {"detected": True}
+        # SQL Injection detected - notify firewall to block IP
+        try:
+            firewall_response = requests.post(
+                "http://firewall:8080/block-ip",
+                json={"ip": ip, "reason": "SQL Injection detected"},
+                timeout=5
+            )
+            if firewall_response.status_code == 200:
+                print(f"IP {ip} successfully blocked by firewall")
+            else:
+                print(f"Failed to block IP {ip} in firewall: {firewall_response.text}")
+        except Exception as e:
+            print(f"Error communicating with firewall: {str(e)}")
+        
+        return {"detected": True, "ip_blocked": True}
     else:
-        return {"detected": False}
+        return {"detected": False, "ip_blocked": False}
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {
+        "status": "healthy",
+        "service": "sql-injection-detector",
+        "model_loaded": model is not None and vectorizer is not None
+    }
 

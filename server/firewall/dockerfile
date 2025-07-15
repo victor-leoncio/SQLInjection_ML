@@ -1,0 +1,25 @@
+FROM nginx:alpine
+
+# Install iptables and other necessary tools
+RUN apk add --no-cache iptables python3 py3-pip curl
+
+# Create app directory
+WORKDIR /app
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt /app/
+RUN pip3 install -r requirements.txt
+
+# Copy firewall management script
+COPY firewall_manager.py /app/
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY start.sh /app/
+
+# Make start script executable
+RUN chmod +x /app/start.sh
+
+# Expose port
+EXPOSE 80
+
+# Start script that runs both nginx and firewall manager
+CMD ["/app/start.sh"]

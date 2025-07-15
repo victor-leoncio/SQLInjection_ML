@@ -12,16 +12,19 @@ df = pd.read_csv("SQLiV3_Clean.csv")
 
 print("\n################ Teste de Métricas do Word2Vec (Com Paralelismo) ################\n")
 
+
 def process_sentence(sentence):
     words = sentence.split()
-    vector = [vectorizer.wv[word] for word in words if word in vectorizer.wv]
-    
+    vector = [vectorizer.wv[word] for word in words]
+
     if vector:
         input_vector = np.mean(vector, axis=0).reshape(1, -1)
         prediction = model.predict(input_vector)
 
         return prediction[0]
     else:
+        print(sentence,words)
+        print(vectorizer)
         return None
 
 @monitorar_recursos
