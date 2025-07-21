@@ -9,7 +9,7 @@ Internet → Firewall Container (Nginx + iptables) → Web Container → SQL Det
 
 ```
 
-![]("figuras/arquitetura.png")
+![](figuras/arquitetura.png)
 
 ### Componentes:
 
