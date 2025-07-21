@@ -1,4 +1,4 @@
-# SQL Injection Detection System with Firewall
+# Sistema de Detecção de SQL Injection
 
 Este projeto implementa um sistema de detecção de SQL Injection usando Machine Learning com uma arquitetura de firewall em camadas.
 
@@ -6,7 +6,10 @@ Este projeto implementa um sistema de detecção de SQL Injection usando Machine
 
 ```
 Internet → Firewall Container (Nginx + iptables) → Web Container → SQL Detection API
+
 ```
+
+![]("figuras/arquitetura.png")
 
 ### Componentes:
 
