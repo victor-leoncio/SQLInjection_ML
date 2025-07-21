@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # Firewall container - sits in front of everything
   firewall:
     build: ./firewall
     container_name: sql_injection_firewall
@@ -13,7 +12,7 @@ services:
     networks:
       - frontend
       - backend
-    privileged: true  # Required for iptables
+    privileged: true
     cap_add:
       - NET_ADMIN
     volumes:
@@ -27,7 +26,7 @@ services:
       timeout: 10s
       retries: 3
 
-  # Web application container
+
   web:
     build: ./web
     container_name: sql_injection_web
@@ -47,7 +46,7 @@ services:
       timeout: 10s
       retries: 3
 
-  # SQL Injection detection API
+
   sql_detect:
     build: ./sql_detect
     container_name: sql_injection_detector

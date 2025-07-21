@@ -6,16 +6,13 @@ import time
 import subprocess
 from werkzeug.exceptions import InternalServerError
 
-# Configurar logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-app.secret_key = 'sua-chave-secreta'  # Alterar para produção
+app.secret_key = 'sua-chave-secreta'
 api_sql_injection = "http://sql_detect:7000/detectar"
 
-# IP blocking is now handled by the firewall container
-# This function is kept for compatibility but doesn't do anything
 def block_ip(ip):
     logger.info(f"IP blocking request for {ip} - handled by firewall container")
     return {"message": f"IP {ip} blocking handled by firewall"}
@@ -43,7 +40,6 @@ def login():
             dados = response.json()
             
             if dados["detected"] == True:
-                # SQL Injection detected - IP already blocked by firewall via API
                 result = f"SQL Injection detectado!\nIP: {user_ip}\nEntrada: {sql_input}"
                 ip_blocked = dados.get("ip_blocked", False)
                 if ip_blocked:
@@ -80,7 +76,6 @@ def predict():
         dados = response.json()
         
         if dados["detected"] == True:
-            # SQL Injection detected - IP already blocked by firewall via API
             result = "SQL Injection detectado!"
             ip_blocked = dados.get("ip_blocked", False)
             if ip_blocked:

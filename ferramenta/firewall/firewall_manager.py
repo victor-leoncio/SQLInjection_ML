@@ -6,13 +6,11 @@ import json
 from typing import Set
 import asyncio
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-# In-memory set to track blocked IPs
 blocked_ips: Set[str] = set()
 
 class BlockIPRequest(BaseModel):
@@ -41,7 +39,6 @@ def block_ip_iptables(ip: str) -> dict:
     if ip in blocked_ips:
         return {"success": True, "message": f"IP {ip} already blocked"}
     
-    # Add rule to block the IP
     command = ["iptables", "-I", "INPUT", "-s", ip, "-j", "DROP"]
     result = execute_iptables_command(command)
     
@@ -57,7 +54,6 @@ def unblock_ip_iptables(ip: str) -> dict:
     if ip not in blocked_ips:
         return {"success": True, "message": f"IP {ip} is not blocked"}
     
-    # Remove rule to unblock the IP
     command = ["iptables", "-D", "INPUT", "-s", ip, "-j", "DROP"]
     result = execute_iptables_command(command)
     
@@ -136,7 +132,6 @@ async def startup_event():
     """Initialize iptables rules on startup"""
     logger.info("Firewall Manager starting up...")
     
-    # Ensure iptables is available
     result = execute_iptables_command(["iptables", "--version"])
     if not result["success"]:
         logger.error("iptables is not available!")

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# SQL Injection Detection System Management Script
-
 case "$1" in
     "start")
         echo "🚀 Starting SQL Injection Detection System..."
